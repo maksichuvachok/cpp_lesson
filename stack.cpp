@@ -1,7 +1,7 @@
 #include <iostream>
 using std::cout;
 using std::endl;
-/**/
+
 class Stack
 {
     public:
@@ -16,63 +16,62 @@ class Stack
             delete [] stack_space;
         };
 
-    private:
-        int *stack_space;
-        unsigned int top;
-    public:
         unsigned int stack_empty()
         {
-            if (top == 0)
-                return 0;
-            else
-                return top;
+            return top != 0;
         }
 
         void push(int x)
         {
             if (top > 5)
-                cout << "overflow" << endl;
-            else
-            {
-                top++;
-                stack_space[top - 1] = x;
-            }
+                throw "overflow";
+            top++;
+            stack_space[top - 1] = x;
+            
         }
 
         void pop()
         {
-            if (stack_empty() == 0)
-                cout << "underflow" << endl;
-            else
-                top--;
+            if (!stack_empty())
+                throw "underflow";
+            top--;
         }
 
-        void show_last(unsigned int i)
+        void show_last()
         {
-            cout << stack_space[i - 1];
+            cout << stack_space[top - 1];
         }
+
+    private:
+        int *stack_space;
+        unsigned int top;
 };
 
 int main()
 {
     Stack s1;
-    s1.push(4);
     cout << s1.stack_empty() << endl;
-    s1.push(1);
-    s1.push(3);
-    s1.push(7);
-    s1.push(7);
-    s1.push(7);
-    cout << s1.stack_empty() << endl;
-
-    s1.push(99);
-    s1.push(99);
-    
-    for (s1.stack_empty(); s1.stack_empty() > 0; s1.pop())
+    try 
     {
-        s1.show_last(s1.stack_empty());
-        cout << ' ';       
+        s1.push(4);
+        s1.push(1);
+        s1.push(3);
+        s1.push(7);
+        s1.push(7);
+        s1.push(7);
+        cout << s1.stack_empty() << endl;
+
+        for (s1.stack_empty(); s1.stack_empty() != 0; s1.pop())
+        {
+            s1.show_last();
+            cout << ' ';       
+        }
     }
+    catch (const char *error_message)
+    {
+        cout << error_message << endl;
+    }
+    
     cout << endl;
     return 0;
 }
